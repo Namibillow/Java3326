@@ -31,17 +31,20 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Color;
 
-import java.util.Timer;
+import java.util.Timer; //Run
 import java.util.TimerTask;
 
-import java.awt.Graphics2D;
-//import java.awt.Color;
+import java.awt.Graphics2D; //for rendering 2-dimensional shapes, text and images
 import java.awt.image.BufferedImage;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseMotionAdapter;
+
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.JRadioButton;
 
 public class GOLW {
 	/***
@@ -54,14 +57,15 @@ public class GOLW {
 
 	final int w = 50; //width
 	final int h = 50; //height
+	//Create a 2D array which stores the current status of each cells
 	boolean[][] currMove = new boolean[h][w]; //Rows-Cols, y - x
 	boolean[][] nextMove = new boolean[h][w];  //True = alive, False = dead
-	boolean play; //For the timer
+	boolean play; //For the timer and button
 	
 	BufferedImage offScreenImg; //Double buffer
-	Graphics2D offScreenGrp;
+	Graphics2D offScreenGrp; 
 	Random random = new Random(); //For the color
-	
+	JRadioButton rdbtnGlider = new JRadioButton("Glider");
 	
 	/**
 	 * Launch the application.
@@ -73,9 +77,9 @@ public class GOLW {
 				try {
 					
 					GOLW window = new GOLW();
-					
 					//make it visible to the screen
 					window.frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -86,14 +90,12 @@ public class GOLW {
 	/**
 	 * Create the application. 
 	 */
-	public GOLW() { //Constructor
-		initialize();
+	public GOLW() { //A Constructor
+		initialize(); //Setting up the content panel
 		offScreenImg = new BufferedImage(panel1.getWidth(), panel1.getHeight(), BufferedImage.TYPE_INT_RGB);
-		offScreenGrp = offScreenImg.createGraphics();;
+		offScreenGrp = offScreenImg.createGraphics();
 		
-//		refreshScreen();
 		Timer time = new Timer();
-		
 		TimerTask task = new TimerTask() {
 			//The run method contains the code that performs the task.
 			public void run() {
@@ -101,7 +103,7 @@ public class GOLW {
 					for(int i=0; i< h; i++) {
 						for(int j=0; j< w; j++) {
 							//Look cell to determine cell lives or not
-							nextMove[i][j] = CellDecision(i,j);;
+							nextMove[i][j] = CellDecision(i,j);
 						}
 					}
 					for(int i=0; i< h; i++) {
@@ -115,7 +117,7 @@ public class GOLW {
 			}
 		};
 		//used to schedule the specified task for repeated fixed-rate execution, beginning after the specified delay.
-//			time.scheduleAtFixedRate(task, 0, 10);
+		//execution at the specified time.
 			time.schedule(task, 0, 220);
 			
 		
@@ -137,7 +139,6 @@ public class GOLW {
 			}
 		});
 		panel1.paint(offScreenGrp);
-////		redraw();
 	}
 
 	/**
@@ -188,7 +189,7 @@ public class GOLW {
 
 	/**
 	 * Re-drawing the panel
-	 * Check the board and see if one cell is True, then fill it with red color
+	 * Check the board and see if one cell is True, then fill it with random color
 	 */
 	private void redraw() {
 		
@@ -242,7 +243,7 @@ public class GOLW {
 		frame.setResizable(true);//////
 		frame.getContentPane().setBackground(new Color(0, 191, 255));
 		//Size of the window
-		frame.setBounds(100, 100, 450, 347);
+		frame.setBounds(100, 100, 656, 438);
 		//Close the window
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//Window Title
@@ -262,6 +263,9 @@ public class GOLW {
 				play = !play;
 				if(play) { //If it is playing currently
 					btnStart.setText("Pause");
+//					if(rdbtnGlider.isSelected()) {
+//						currMove[10][10] = true;
+//					}
 					redraw();
 				}
 				else{ //If the button is in the Pause state
@@ -270,8 +274,9 @@ public class GOLW {
 				}
 			}
 		});
+		
 		//Setting the button
-		btnStart.setBounds(6, 290, 75, 29);
+		btnStart.setBounds(16, 381, 75, 29);
 		frame.getContentPane().add(btnStart);
 		
 		/*
@@ -286,7 +291,7 @@ public class GOLW {
 			}
 		});
 		
-		btnReset.setBounds(349, 290, 87, 29);
+		btnReset.setBounds(551, 381, 87, 29);
 		btnReset.setToolTipText("Reset the game");
 		frame.getContentPane().add(btnReset);
 		
@@ -315,8 +320,13 @@ public class GOLW {
 		
 		
 		panel1.setBackground(new Color(224, 255, 255));
-		panel1.setBounds(16, 5, 420, 283);
+		panel1.setBounds(16, 5, 622, 368);
 		frame.getContentPane().add(panel1);
 		panel1.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		JRadioButton rdbtnGlider = new JRadioButton("Glider");
+		rdbtnGlider.setBounds(99, 382, 141, 23);
+		frame.getContentPane().add(rdbtnGlider);
+		
 	}
 }
